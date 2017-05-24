@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycoolweather.android">
 
+
+    <!-- 权限设置 -->
+    <users-permission android:name="android.permission.INTERNET"></users-permission>
+    
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
