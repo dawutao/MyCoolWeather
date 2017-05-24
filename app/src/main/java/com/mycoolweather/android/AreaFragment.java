@@ -1,6 +1,7 @@
 package com.mycoolweather.android;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,7 +54,7 @@ public class AreaFragment extends Fragment {
 
     private ArrayAdapter<String> adapter;
 
-    private List<String> datalist = new ArrayList<~>();
+    private List<String> datalist = new ArrayList<>();
 
     //省份列表
     private List<Province> provinceList;
@@ -97,9 +98,16 @@ public class AreaFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentLeavl == LEAVE_PROVINCE) {
                     selectedProvince = provinceList.get(position);
+                    queryCities();
                 } else if (currentLeavl == LEAVE_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLeavl == LEAVE_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -115,6 +123,8 @@ public class AreaFragment extends Fragment {
                 }
             }
         });
+
+        queryProvinces();
     }
 
     /*
@@ -145,12 +155,12 @@ public class AreaFragment extends Fragment {
     /*
     * 查询全国的城市，优先从数据库查询，如果没有的话再去服务器上查询
     * */
-    private void queryCites() {
+    private void queryCities() {
         titletext.setText(selectedProvince.getProvinceName());
 
         backbutton.setVisibility(View.VISIBLE);
 
-        cityList = DataSupport.where("province = ?", String.valueOf(selectedProvince.getId())).find(City.class);
+        cityList = DataSupport.where("provincecId = ?", String.valueOf(selectedProvince.getId())).find(City.class);
 
         if (cityList.size() > 0) {
             datalist.clear();
@@ -176,7 +186,7 @@ public class AreaFragment extends Fragment {
 
         backbutton.setVisibility(View.VISIBLE);
 
-        countyList = DataSupport.where("city = ?", String.valueOf(selectedCity.getId())).find(County.class);
+        countyList = DataSupport.where("cityId = ?", String.valueOf(selectedCity.getId())).find(County.class);
 
         if (countyList.size() > 0) {
             datalist.clear();
@@ -223,7 +233,7 @@ public class AreaFragment extends Fragment {
                             if ("province".equals(type)) {
                                 queryProvinces();
                             } else if ("city".equals(type)) {
-                                queryCites();
+                                queryCities();
                             } else if ("county".equals(type)) {
                                 queryCounties();
                             }

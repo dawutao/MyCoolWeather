@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycoolweather.android">
 
-
     <!-- 权限设置 -->
-    <users-permission android:name="android.permission.INTERNET"></users-permission>
-    
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
@@ -21,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WeatherActivity"></activity>
     </application>
 
 </manifest>
